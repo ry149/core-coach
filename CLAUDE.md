@@ -10,6 +10,8 @@ Claude Code 專案筆記：每個 session 開始時會自動讀取這份檔案�
 
 - 純靜態網站，沒有建置步驟、沒有套件：直接打開 `index.html` 就能跑。
 - 網站從 `main` 分支部署（GitHub Pages）。推上 `main` 約 1～2 分鐘後生效。
+- Repo：`ry149/core-coach`；網址 https://rolandyang.com/core-coach/（ry149 帳號的自訂網域，ry149.github.io/core-coach 會轉到這裡）。
+  2026-11-21 從 `ro3378/core-coach` 複製過來，舊 repo 不再更新。
 - 使用者主要在手機上用，直式和橫式都要顧到。
 
 ## 檔案
