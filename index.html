@@ -305,15 +305,16 @@ const EX={
  flutter:{name:'剪刀腳',en:'Flutter Kicks',lv:3,bpm:80,cues:['仰躺，雙腿伸直微微離地','雙腳小幅度上下交替擺動','下背緊貼地面','手可放在臀部下方輔助'],yt:'剪刀腳 flutter kicks 教學'},
  vcrunch:{name:'V 字捲腹',en:'V Crunch',lv:3,bpm:50,cues:['仰躺，手腳伸直','同時收腿、捲起上半身成 V 字','再慢慢伸展回到起始','腳不碰地'],yt:'V字捲腹 v crunch 教學'},
  legdrop:{name:'雙腿下放',en:'Leg Drops',lv:3,bpm:50,cues:['仰躺，雙腿併攏抬到垂直','慢慢往下放、腳不碰地','用下腹把腿拉回垂直','下背貼地，不甩腿'],yt:'leg drops 教學'},
- // Warm-up / cool-down stretches (May Fit video, CC BY; Relaxing Yoga pack by Anicon Studio)
+ // Warm-up / cool-down stretches (May Fit video, CC BY; Relaxing Yoga pack by Anicon Studio; puppy by Faiyaz Algur)
  twistr:{name:'躺姿扭轉（右）',en:'Supine Spinal Twist (R)',lv:4,stretch:true,hold:30,img:'img/twist-r.jpg',src:'https://www.youtube.com/watch?v=78Cpioi-LS8&t=539',cues:['仰躺，右膝彎曲放至身體左側','左手放在右膝上','右手往右側地板延伸','視線也看向右側']},
  twistl:{name:'躺姿扭轉（左）',en:'Supine Spinal Twist (L)',lv:4,stretch:true,hold:30,img:'img/twist-l.jpg',src:'https://www.youtube.com/watch?v=78Cpioi-LS8&t=556',cues:['換邊，左膝彎曲放至身體右側','右手放在左膝上','左手往左側地板延伸','放鬆腰部與脊椎']},
  updog:{name:'上犬式',en:'Upward-Facing Dog',lv:4,stretch:true,hold:30,src:'https://www.youtube.com/watch?v=78Cpioi-LS8&t=572',cues:['趴姿起身，雙手推地','上半身向前向上延伸','可以微微左右轉動','伸展與放鬆腹部前側']},
- catcow:{name:'嬰兒式＋貓牛式',en:'Child Pose & Cat Cow',lv:4,stretch:true,hold:30,src:'https://www.youtube.com/watch?v=78Cpioi-LS8&t=585',cues:['先向後坐回做嬰兒式延展','回到四足跪姿做貓牛式','吸氣時拱背、吐氣時抬頭延伸脊椎','重複循環，放鬆背部與核心']}
+ catcow:{name:'嬰兒式＋貓牛式',en:'Child Pose & Cat Cow',lv:4,stretch:true,hold:30,src:'https://www.youtube.com/watch?v=78Cpioi-LS8&t=585',cues:['先向後坐回做嬰兒式延展','回到四足跪姿做貓牛式','吸氣時拱背、吐氣時抬頭延伸脊椎','重複循環，放鬆背部與核心']},
+ puppy:{name:'小狗式',en:'Extended Puppy Pose',lv:4,stretch:true,hold:30,cues:['四足跪姿，膝蓋在臀部正下方','雙手慢慢往前走，臀部留在膝蓋上方','胸口和臉往地板貼近','手臂盡量往前伸，放鬆肩膀與上背'],yt:'小狗式 puppy pose 瑜伽'}
 };
 const LV={0:['全部','var(--accent)'],1:['初階','var(--l1)'],2:['中階','var(--l2)'],3:['高階','var(--l3)'],4:['伸展','var(--ok)']};
-// Warm-up and cool-down: these 4 stretches at the start and end of every course
-const WARM=['twistr','twistl','updog','catcow'];
+// Warm-up and cool-down: these 5 stretches at the start and end of every course
+const WARM=['twistr','twistl','updog','catcow','puppy'];
 // Plank always comes with side plank and bird dog on either side
 const BLOCK=['sideplank','plankhold','birddog'];
 const COURSES=[
@@ -337,7 +338,8 @@ function unitItems(u,c){
 function buildQueue(c){
   const target=S.mins*60,warm=WARM.map(id=>[id,0]),cool=WARM.map(id=>[id,0]),core=[];
   let bag=[],k=0,fails=0;
-  const total=extra=>seqSec([...warm,...core,...extra,...cool],c);
+  // S.mins counts only the core workout; warm-up and cool-down stretches are extra
+  const total=extra=>seqSec([...core,...extra],c);
   while(fails<8&&target-total([])>=20){
     let u;
     if(c.random){if(!bag.length)bag=shuffle(c.pool);u=bag.shift()}
@@ -347,7 +349,7 @@ function buildQueue(c){
     if(items[0][0]===last&&c.random){if(!bag.length)bag=shuffle(c.pool);bag.push(u);fails++;continue}
     // Shorten a beat exercise to fit the remaining time
     if(items.length===1&&items[0][1]>0)while(items[0][1]>1&&total(items)>target)items=[[items[0][0],items[0][1]-1]];
-    if(total(items)>target){fails++;if(!c.random)break;continue}
+    if(total(items)>target){fails++;continue}
     core.push(...items);fails=0;
   }
   return [...warm,...core,...cool];
@@ -434,12 +436,12 @@ function home(){
   <div class="hhead"><h1>核心訓練</h1></div><p class="sub">按開始就不用再碰手機</p>
   <div class="clist">${COURSES.map(c=>`<div class="ccard">
     <button class="cbody" data-c="${c.id}"><span class="badge" style="background:${LV[c.lv][1]}">${LV[c.lv][0]}</span>
-      <span class="ctext"><b>${c.name}</b><small>約 ${S.mins} 分鐘・${c.random?'每次隨機':'固定順序'}</small></span></button>
+      <span class="ctext"><b>${c.name}</b><small>${S.mins} 分鐘＋伸展・${c.random?'每次隨機':'固定順序'}</small></span></button>
     <button class="go" data-go="${c.id}">▶ 開始</button>
   </div>`).join('')}</div>
   <details class="fold" data-fold="set"${FOLD.set?' open':''}><summary>設定・邊看影片邊訓練<span>${S.mins} 分鐘・${S.speed===1?'標準':S.speed<1?'慢':'快'}速・${parseYT(S.pl)&&!parseYT(S.pl).bad?'已設影片':'無影片'}</span></summary>
   <div class="settings">
-    <div class="row"><span>課程長度</span>${segCtl('mins',[[15,'15 分'],[20,'20 分'],[30,'30 分']])}</div>
+    <div class="row"><span>課程長度<small style="display:block;color:var(--mute);font-size:12px">不含伸展</small></span>${segCtl('mins',[[15,'15 分'],[20,'20 分'],[30,'30 分']])}</div>
     <div class="row"><span>節奏速度</span>${segCtl('speed',[[0.75,'慢'],[1,'標準'],[1.25,'快']])}</div>
     <div class="row"><span>休息時間</span>${segCtl('rest',[[0,'預設'],[10,'10秒'],[20,'20秒'],[30,'30秒']])}</div>
     <div class="row"><span>語音提示</span>${segCtl('voice',[[true,'開'],[false,'關']])}</div>
@@ -465,7 +467,7 @@ function courseView(c,keep,stay){
   const ids=[...WARM,...core];
   $('#app').innerHTML=`<div class="cview"><div class="cleft"><button class="back" data-home>‹ 返回</button>
   <div class="chead"><span class="badge" style="background:${LV[c.lv][1]}">${LV[c.lv][0]}</span><h1>${c.name}</h1></div>
-  <p class="sub">約 ${S.mins} 分鐘・${c.random?'每次隨機順序':'固定順序'}・休息 ${restOf(c)} 秒・前後含暖身與收操</p>
+  <p class="sub">核心 ${S.mins} 分鐘・前後伸展約 ${Math.round(seqSec(WARM.map(id=>[id,0]),c)*2/60)} 分鐘・${c.random?'每次隨機順序':'固定順序'}・休息 ${restOf(c)} 秒</p>
   <button class="big bigcta" data-start="${c.id}"><span>▶ 開始訓練</span><small>${c.random?'每次開始都會重新隨機排列':'依固定順序進行'}</small></button>
   <p class="note lnote">開始後螢幕會保持常亮，建議把手機立在地上、螢幕朝向你</p></div><div class="cright">
   <div class="sec">暖身／收操 ${WARM.length} 個伸展＋核心動作 ${core.length} 個</div>
