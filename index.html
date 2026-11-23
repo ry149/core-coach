@@ -63,6 +63,7 @@ h1{font-size:26px;font-weight:900;margin:4px 0 2px;letter-spacing:.5px}
 .cues li{padding:9px 0 9px 26px;position:relative;border-bottom:1px solid var(--line);font-size:16px}
 .cues li:before{content:"";position:absolute;left:6px;top:17px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
 .yt{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;padding:14px;border-radius:14px;border:1px solid var(--line);color:var(--text);text-decoration:none;font-weight:700}
+.ver{margin:20px 0 0;text-align:center;font-size:11px;color:var(--mute);opacity:.45;letter-spacing:.02em}
 .yt i{width:26px;height:18px;background:#FF3B30;border-radius:5px;position:relative;display:inline-block}
 .yt i:after{content:"";position:absolute;left:10px;top:4px;border-left:8px solid #fff;border-top:5px solid transparent;border-bottom:5px solid transparent}
 /* workout */
@@ -429,6 +430,8 @@ function segCtl(key,opts){
 }
 let VIEW='home',homeY=0,courseY=0;
 let FOLD={set:false,lib:false};
+// Shown faintly at the bottom of the home page; bump on every push to main
+const VERSION='v1.42',VERSION_DATE='2026-11-23';
 function home(){
   VIEW='home';$('#app').classList.remove('fit');
   stopPreview();
@@ -453,7 +456,8 @@ function home(){
     <div class="row"><span>暫停訓練時影片也暫停</span>${segCtl('vpause',[[true,'是'],[false,'否']])}</div>
   </div></details>
   <details class="fold" data-fold="lib"${FOLD.lib?' open':''}><summary>動作庫<span>${Object.keys(EX).length} 個動作</span></summary>
-  <div class="grid">${Object.keys(EX).map(id=>`<button class="ex" data-x="${id}"><div class="pic">${still(id)}</div><b>${NM(id)}</b><small>${LV[EX[id].lv][0]}</small></button>`).join('')}</div></details>`;
+  <div class="grid">${Object.keys(EX).map(id=>`<button class="ex" data-x="${id}"><div class="pic">${still(id)}</div><b>${NM(id)}</b><small>${LV[EX[id].lv][0]}</small></button>`).join('')}</div></details>
+  <p class="ver">${VERSION}・${VERSION_DATE}</p>`;
   if(FOLD.lib) hydrate();
   scrollTo(0,homeY);
 }

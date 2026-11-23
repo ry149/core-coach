@@ -62,6 +62,8 @@ Claude Code 專案筆記：每個 session 開始時會自動讀取這份檔案�
 
 ## 工作方式
 
+- 每次推上 `main` 前，把 `index.html` 的 `VERSION`（v1.N，N 加 1）和 `VERSION_DATE` 改成當天日期；首頁最底下會淡淡地顯示。
+
 - 改版面後，用 Playwright 截圖檢查直式（412×915）和橫式（915×412）兩種尺寸。
   要看影片模式時，在頁面上把 `#run` 加上 `withvideo` class 就好，不用真的載入 YouTube。
 - 要量對齊時，用 `getBoundingClientRect()` 比較 `#beat`、`#dots`、`#eight` 的左右邊界。
